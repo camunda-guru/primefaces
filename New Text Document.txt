@@ -1,0 +1,23 @@
+<h:outputLabel value="Signature"></h:outputLabel>
+<h:panelGrid columns="2">
+ <p:signature style="width:400px;height:100px" widgetVar="sig" 
+ value="#{signatureView.value}" required="true" label="Signature" 
+ guideline="true"/>
+
+<h:panelGrid columns="2">
+ <p:commandButton value="Submit" icon="ui-icon-check" update="output"/>
+  <p:commandButton value="Clear" icon="ui-icon-close" type="button" 
+  onclick="PF('sig').clear()"/>
+
+</h:panelGrid>
+
+ <p:outputPanel id="output">
+        <h:outputText rendered="#{not empty signatureView.value}" 
+        style="font-size:12px;display:block" value="Your Signature" />
+        <p:signature style="width:400px;height:50px;" 
+        value="#{signatureView.value}" readonly="true"
+                     rendered="#{not empty signatureView.value}" 
+                     backgroundColor="#eaeaea" color="#03a9f4"/>
+    </p:outputPanel>
+ </h:panelGrid>
+ 
