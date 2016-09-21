@@ -1,0 +1,111 @@
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
+
+import com.infinite.onlinestore.beans.RegCustomerBeanRemote;
+import com.infinite.onlinestore.entities.Cart;
+import com.infinite.onlinestore.entities.Item;
+import com.infinite.onlinestore.entities.MemberType;
+import com.infinite.onlinestore.entities.RegisteredCustomer;
+import com.infinite.onlinestore.entities.RoleType;
+import com.infinite.onlinestore.entities.StatusType;
+@ManagedBean
+@SessionScoped
+public class StatusController {
+   @EJB
+   private RegCustomerBeanRemote regCustomerBeanRemote;
+   private List<RegisteredCustomer> selectedCustomersList;
+  private StatusType statusTypes;
+  private RoleType roleTypes;
+  public StatusType[] getStausTypes() {
+      return StatusType.values();
+    }
+  public RoleType[] getRoleTypes() {
+      return RoleType.values();
+    }
+   
+   
+   
+   public RegCustomerBeanRemote getRegCustomerBeanRemote() {
+	return regCustomerBeanRemote;
+}
+public void setRegCustomerBeanRemote(RegCustomerBeanRemote regCustomerBeanRemote) {
+	this.regCustomerBeanRemote = regCustomerBeanRemote;
+}
+public List<RegisteredCustomer> getSelectedCustomersList() {
+	return selectedCustomersList;
+}
+public void setSelectedCustomersList(List<RegisteredCustomer> selectedCustomersList) {
+	this.selectedCustomersList = selectedCustomersList;
+}
+public void onRowSelect(SelectEvent event) {
+	
+	String customerId =String.valueOf(((RegisteredCustomer) event.getObject()).getCustomerId());
+    FacesMessage msg = new FacesMessage("Customer Selected", customerId);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+}
+
+public void onRowUnselect(UnselectEvent event) {
+	String customerId =String.valueOf(((RegisteredCustomer) event.getObject()).getCustomerId());
+    FacesMessage msg = new FacesMessage("Customer Unselected",customerId);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+}	
+public List<RegisteredCustomer> getAllPendingCustomers()
+{
+	Iterator itr =regCustomerBeanRemote.getAllPendingCustomers().iterator();
+	Object[] obj=null;
+	RegisteredCustomer customer=null;
+	List<RegisteredCustomer> regCustomerList=new ArrayList<RegisteredCustomer>();
+	while(itr.hasNext())
+	{
+		obj=(Object[]) itr.next();
+		customer=new RegisteredCustomer();
+		customer.setCustomerId((Integer)obj[0]);
+		StatusType stype=StatusType.valueOf(obj[1].toString());
+		customer.setStatusType(stype);
+		RoleType rtype=RoleType.valueOf(obj[2].toString());
+		customer.setRoleType(rtype);
+		regCustomerList.add(customer);
+	}
+	return regCustomerList;
+}
+	
+public void onRowEdit(RowEditEvent event) {
+	String customerId =String.valueOf(((RegisteredCustomer) event.getObject()).getCustomerId());
+    FacesMessage msg = new FacesMessage("Customer Unselected",customerId);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+}
+ 
+public void onRowCancel(RowEditEvent event) {
+	String customerId =String.valueOf(((RegisteredCustomer) event.getObject()).getCustomerId());
+    FacesMessage msg = new FacesMessage("Customer Unselected",customerId);
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+}
+ 
+public void onCellEdit(CellEditEvent event) {
+    Object oldValue = event.getOldValue();
+    Object newValue = event.getNewValue();
+     
+    if(newValue != null && !newValue.equals(oldValue)) {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+}	
+	
+
+
+
+	
+}

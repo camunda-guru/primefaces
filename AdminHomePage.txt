@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui"
+xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+ 
+</h:head>
+<h:body>
+<!-- <div id="header"><ui:include src="menu.xhtml">
+ </ui:include></div> -->
+<h3>Inbox...</h3>
+<h:form id="adminForm">
+<p:growl id="msgs" showDetail="true" />
+
+
+     <p:dataTable id="checkboxDT" var="cust" value="#{statusController.allPendingCustomers}" selection="#{statusController.selectedCustomersList}" 
+ rowKey="#{cust.customerId}"  editable="true" style="margin-bottom:20px">
+       <f:facet name="header">
+           Customer Status Editing
+       </f:facet>
+    <p:ajax event="rowEdit" listener="#{statusController.onRowEdit}" update=":adminForm:msgs" />
+       <p:ajax event="rowEditCancel" listener="#{statusController.onRowCancel}" update=":adminForm:msgs" />
+ <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+       <p:column headerText="Customer Id">
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{cust.customerId}" /></f:facet>
+               <f:facet name="input"><p:inputText id="modelInput" value="#{cust.customerId}" style="width:100%"/></f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+      
+ 
+       <p:column headerText="Role">
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{cust.roleType}" /></f:facet>
+               <f:facet name="input">
+                   <h:selectOneMenu value="#{cust.roleType}" style="width:100%">
+                       <f:selectItems value="#{statusController.roleTypes}"   />
+                   </h:selectOneMenu>
+               </f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+       <p:column headerText="Status">
+           <p:cellEditor>
+               <f:facet name="output"><h:outputText value="#{cust.statusType}" /></f:facet>
+               <f:facet name="input">
+                   <h:selectOneMenu value="#{cust.statusType}" style="width:100%">
+                       <f:selectItems value="#{statusController.stausTypes}"  />
+                   </h:selectOneMenu>
+               </f:facet>
+           </p:cellEditor>
+       </p:column>
+ 
+       <p:column style="width:32px">
+           <p:rowEditor />
+       </p:column>
+        <f:facet name="footer">
+            <p:commandButton process="checkboxDT"  icon="ui-icon-search"
+             value="View" update=":adminForm:multiCustomerDetail" 
+             onstart = "PF('statusDialog').show()" 
+             oncomplete="PF('statusDialog').hide();PF('multiCustomerDialog').show()" />
+          
+            
+</f:facet>
+   </p:dataTable>
+ 
+  <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" 
+ resizable="false" showHeader="false">
+    <p:graphicImage name="../images/tpiw-loader.gif"  style="width:100px;height:100px;margin-top:10%;"/>
+</p:dialog>
+ 
+<p:dialog header="Selected Customers" widgetVar="multiCustomerDialog" modal="true" 
+showEffect="fade" hideEffect="fade" resizable="false" width="200">
+        <p:outputPanel id="multiCustomerDetail" style="text-align:center;">
+           <h:outputText value="Admin- #{loginController.currentUser}" 
+                style="display:block;color:green"/>
+            <ui:repeat value="#{statusController.selectedCustomersList}" var="cust">
+                <h:outputText value="#{cust.customerId} - #{cust.statusType} " 
+                style="display:block"/>
+            </ui:repeat>
+               
+        </p:outputPanel>
+    </p:dialog>
+    
+    
+</h:form>
+</h:body>
+</html>
