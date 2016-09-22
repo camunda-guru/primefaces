@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui"
+xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+ <style>
+ .pclass
+ {
+ width:100px;
+ height:100px;
+ }
+ </style>
+</h:head>
+<h:body>
+<div id="header"><ui:include src="SupplierMenu.xhtml">
+ </ui:include></div>
+<h3>Print Items</h3>
+<h:form id="cartForm">
+<p:growl id="msgs" showDetail="true" />
+
+ <p:dataTable id="tbl" var="item" value="#{itemListController.all}" 
+  style="margin-bottom:0" paginator="true" rows="5"
+                         paginatorTemplate="{CurrentPageReport} 
+                         {FirstPageLink} {PreviousPageLink} 
+                         {PageLinks} {NextPageLink} {LastPageLink} 
+                         {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15">
+       <f:facet name="{Exporters}">
+           <h:commandLink>
+        <p:graphicImage name="../images/excel.jpg"  styleClass="pclass"/>
+        <p:dataExporter type="xls" target="tbl" fileName="Items" pageOnly="true"/>
+    </h:commandLink>
+ 
+    <h:commandLink>
+        <p:graphicImage name="../images/pdf.png" styleClass="pclass"/>
+        <p:dataExporter type="pdf" target="tbl" fileName="Items" pageOnly="true" />
+    </h:commandLink>
+ 
+    <h:commandLink>
+        <p:graphicImage name="../images/csv.jpg" styleClass="pclass"/>
+        <p:dataExporter type="csv" target="tbl" fileName="Items" pageOnly="true" />
+    </h:commandLink>
+ 
+    <h:commandLink>
+        <p:graphicImage name="../images/xml.jpg" styleClass="pclass"/>
+        <p:dataExporter type="xml" target="tbl" fileName="Items" pageOnly="true" />
+    </h:commandLink>
+        </f:facet>
+       <p:column>
+            <f:facet name="header">
+                <h:outputText value="Id" />
+            </f:facet>
+            <h:outputText value="#{item.itemId}" />
+        </p:column>
+ 
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="ItemName"/>
+            </f:facet>
+            <h:outputText value="#{item.itemName}" />
+        </p:column>
+  
+    </p:dataTable>
+   <h3>Export Page Data Only</h3>
+    <h:commandLink>
+        <p:graphicImage name="../images/excel.jpg"  styleClass="pclass"/>
+        <p:dataExporter type="xls" target="tbl" fileName="Items" pageOnly="true"/>
+    </h:commandLink>
+ 
+    <h:commandLink>
+        <p:graphicImage name="../images/pdf.png" styleClass="pclass"/>
+        <p:dataExporter type="pdf" target="tbl" fileName="Items" pageOnly="true" />
+    </h:commandLink>
+ 
+    <h:commandLink>
+        <p:graphicImage name="../images/csv.jpg" styleClass="pclass"/>
+        <p:dataExporter type="csv" target="tbl" fileName="Items" pageOnly="true" />
+    </h:commandLink>
+ 
+    <h:commandLink>
+        <p:graphicImage name="../images/xml.jpg" styleClass="pclass"/>
+        <p:dataExporter type="xml" target="tbl" fileName="Items" pageOnly="true" />
+    </h:commandLink>
+        
+</h:form>
+</h:body>
+</html>
