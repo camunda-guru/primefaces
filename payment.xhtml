@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:p="http://primefaces.org/ui"
+xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+ 
+<style>
+.gclass
+{
+width:50px;
+height:50px;
+}
+.pclass
+{
+width:70%;
+margin-left: 15%;
+
+}
+.grid
+{
+width:90%;
+margin-left: 15%;
+
+}
+</style>
+<script>
+
+
+</script>
+</h:head>
+<h:body>
+<div id="header"><ui:include src="AdminMenu.xhtml">
+ </ui:include></div> 
+ <h:form id="bankForm" enctype="multipart/form-data">
+ 
+<p:growl id="tt" showDetail="true"/>
+<p:panelGrid columns="2"   styleClass="pclass">
+<p:galleria value="#{imagesView.images}" var="image" panelWidth="200"
+ panelHeight="150" showCaption="true">
+    <p:graphicImage name="../grocery/#{image}" 
+    alt="Payment Process for #{image}" title="One Stop Shop" 
+    styleClass="pclass"/>
+</p:galleria>
+<p:panelGrid columns="2" style="width:100%">
+<p:outputLabel value="Hi!#{loginController.currentUser}"></p:outputLabel>
+<p:outputLabel value="Your Bill Amount ->#{checkOutController.billAmount}"></p:outputLabel>
+<p:panel header="#{bank.bankName}" style="text-align:center">
+            <h:panelGrid columns="2" style="width:100%">
+                <p:graphicImage name="../images/netbanking.png" styleClass="gclass"/> 
+ 
+               
+ 
+                <p:commandLink update=":bankForm:bankGridDetail" oncomplete="PF('bankGridDialog').show()" title="View Detail">
+                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                    <f:setPropertyActionListener value="NetBanking" target="#{paymentController.paymentOption}" />
+                     
+                </p:commandLink>
+                </h:panelGrid>
+ </p:panel>
+      <p:panel header="#{bank.bankName}" style="text-align:center">
+       <h:panelGrid columns="2" style="width:100%">         
+                <p:graphicImage name="../images/cash.jpg" styleClass="gclass"/> 
+ 
+               
+ 
+                <p:commandLink update=":bankForm:bankGridDetail" oncomplete="PF('bankGridDialog').hide()" title="View Detail">
+                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                    <f:setPropertyActionListener value="Cash" target="#{paymentController.paymentOption}" />
+                     
+                </p:commandLink>
+               
+            
+          
+           </h:panelGrid>
+ </p:panel>  
+            
+            
+            
+        
+</p:panelGrid>
+        
+ 
+        
+ 
+				
+</p:panelGrid>
+<p:dialog header="Bank Grid" widgetVar="bankGridDialog" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+        <p:outputPanel id="bankGridDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{paymentController.paymentOption eq 'NetBanking'}" columnClasses="label,value">
+ 
+ 
+ 
+ 
+ <p:dataGrid  var="bank" value="#{paymentController.bankOptions}" columns="4" layout="grid"
+        rows="5"  id="banks"  >
+ 
+        <f:facet name="header">
+            Banks
+        </f:facet>
+ 
+        <p:panel header="#{bank.bankName}" style="text-align:center">
+            <h:panelGrid columns="1" style="width:100%">
+                <p:graphicImage name="../images/#{bank.imageName}" styleClass="gclass"/> 
+ 
+               
+ 
+                <p:commandLink update=":bankForm:bankDetail" oncomplete="PF('bankDialog').show()" title="View Detail">
+                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                    <f:setPropertyActionListener value="#{bank.bankName}" target="#{paymentController.bankOption}" />
+                     <f:setPropertyActionListener value="#{bank.imageName}" target="#{paymentController.imageOption}" />
+                </p:commandLink>
+            </h:panelGrid>
+        </p:panel>
+ 
+    </p:dataGrid>
+   </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
+    <p:dialog header="Bank Info" widgetVar="bankDialog" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+        <p:outputPanel id="bankDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{not empty paymentController.bankOption}" columnClasses="label,value">
+                <f:facet name="header">
+                    <p:graphicImage name="../images/#{paymentController.imageOption}" styleClass="gclass"/> 
+                </f:facet>
+ 
+                <h:outputText value="Bank Name:" />
+                <h:outputText value="#{paymentController.bankOption}" />
+                 <h:outputText value="AC Number:" />
+                <h:inputText value="#{paymentController.payment.accountNo}"></h:inputText>
+                 <h:outputText value="AC Holder Name:" />
+                <h:inputText value="#{paymentController.payment.accountHolderName}"></h:inputText>
+             <h:outputText value="IFSC Code:" />
+                <h:inputText value="#{paymentController.payment.IFSCCode}"></h:inputText>
+                 <h:outputText value="Amount:" />
+                <h:inputText value="#{paymentController.payment.amount}"></h:inputText>
+                 <h:outputText value="Reason" />
+                <h:inputText value="#{paymentController.payment.reason}"></h:inputText>
+                <f:facet name="footer">
+                <h:commandButton value="Fund Transfer" action="#{paymentController.fundTransafer}"></h:commandButton> 
+                
+                </f:facet>
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
+
+</h:form>
+</h:body>
+</html>
