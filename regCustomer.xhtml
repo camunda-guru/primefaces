@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui">
+<h:head>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<style>
+#data
+{
+width:40%;
+ float:left;
+}
+#image
+{
+width:20%;
+margin-left: 70%;
+
+}
+</style>
+</h:head>
+<h:body>
+ <div id="header"><ui:include src="menu.xhtml">
+ </ui:include></div> 
+
+<div id="data">
+<h:panelGrid>
+    	
+ <h:message for="userName" style="color:red"></h:message>
+  <h:message for="password" style="color:red"></h:message>  
+  <h:message for="dob" style="color:red"></h:message>   	 	
+</h:panelGrid>
+
+<h:form>
+<p:panelGrid columns="2">
+<f:facet name="header">
+        <p:row>
+            <p:column colspan="7">Customer Registration</p:column>
+        </p:row>
+</f:facet>
+<h:outputLabel value="UserName"></h:outputLabel>
+
+<p:keyboard id="userName" value="#{regCustomerController.regCustomer.userName}" 
+layout="qwertyBasic" required="true">
+
+<f:validator validatorId="userNameValidator"></f:validator>
+
+</p:keyboard>
+ 
+<h:outputLabel value="Password"></h:outputLabel>
+
+<p:password id="password" value="#{regCustomerController.regCustomer.password}" feedback="true" match="confirmPwd"  required="true">
+<f:validateLength minimum="4" maximum="8"></f:validateLength>
+
+
+</p:password>
+
+<h:outputLabel value="Confirm Password"></h:outputLabel>
+
+<p:password id="confirmPwd" value="#{regCustomerController.regCustomer.password}"  feedback="true"  required="true">
+<f:validateLength minimum="4" maximum="8"></f:validateLength>
+
+
+</p:password>
+<h:outputLabel value="DOB"></h:outputLabel>
+ <p:calendar id="dob" value="#{regCustomerController.regCustomer.DOB}" pattern="MM/dd/yyyy"  required="true">
+ 
+ <f:validator validatorId="dobValidator"></f:validator>
+ </p:calendar> 
+
+<h:panelGrid columns="2">
+
+<f:facet name="header">
+        <p:row>
+            <p:column colspan="7">Permanent Address</p:column>
+        </p:row>
+</f:facet>
+<h:outputLabel value="Street"></h:outputLabel>
+
+<h:inputText id="street" value="#{regCustomerController.permAddress.street}" >
+</h:inputText>
+
+<h:outputLabel value="City"></h:outputLabel>
+<h:inputText id="city" value="#{regCustomerController.permAddress.city}" >
+</h:inputText>
+<h:outputLabel value="State"></h:outputLabel>
+<h:inputText id="state" value="#{regCustomerController.permAddress.state}" >
+</h:inputText>
+
+<h:outputLabel value="PinCode"></h:outputLabel>
+<h:inputText id="pincode" value="#{regCustomerController.permAddress.pincode}" >
+</h:inputText>
+
+</h:panelGrid>
+<h:panelGrid columns="2">
+<f:facet name="header">
+        <p:row>
+            <p:column colspan="7">Communication Address</p:column>
+        </p:row>
+</f:facet>
+<h:outputLabel value="Street"></h:outputLabel>
+
+<h:inputText id="cstreet" value="#{regCustomerController.commAddress.street}" >
+</h:inputText>
+<h:outputLabel value="City"></h:outputLabel>
+<h:inputText id="ccity" value="#{regCustomerController.commAddress.city}" >
+</h:inputText>
+<h:outputLabel value="State"></h:outputLabel>
+<h:inputText id="cstate" value="#{regCustomerController.commAddress.state}" >
+</h:inputText>
+
+<h:outputLabel value="PinCode"></h:outputLabel>
+<h:inputText id="cpincode" value="#{regCustomerController.commAddress.pincode}" >
+</h:inputText>
+
+</h:panelGrid>
+
+
+<h:outputLabel  value="Select Member:"></h:outputLabel>
+        <p:selectOneMenu value="#{regCustomerController.type}" style="width:150px">
+              
+               
+                <f:selectItems value="#{membershipController.allMembership}" />
+                
+            </p:selectOneMenu>
+ <!-- <h:outputLabel value="Signature"></h:outputLabel>
+
+ <h:panelGrid columns="2">
+ <p:signature style="width:400px;height:100px" widgetVar="" 
+ value="" required="true" label="Signature" guideline="true"/>
+
+<h:panelGrid columns="2">
+ <p:commandButton value="Submit" icon="ui-icon-check" update="output"/>
+  <p:commandButton value="Clear" icon="ui-icon-close" type="button" 
+  onclick="PF('sig').clear()"/>
+
+</h:panelGrid>
+
+ <p:outputPanel id="output">
+        <h:outputText rendered="" 
+        style="font-size:12px;display:block" value="Your Signature" />
+        <p:signature style="width:400px;height:50px;" 
+        value="" readonly="true"
+                     rendered="" 
+                     backgroundColor="#eaeaea" color="#03a9f4"/>
+    </p:outputPanel> 
+ </h:panelGrid> -->
+ 
+<div class="g-recaptcha" data-sitekey="6LdrVAcUAAAAABMjaqPVMW8vhwNyqrhx0hcS-Bqt"></div>
+<p:captcha label="Captcha" />        
+<h:commandButton value="Submit" action="#{regCustomerController.addRegCustomer}">
+</h:commandButton>
+</p:panelGrid>
+</h:form>
+</div>
+<div id="image">
+<!-- <h:panelGrid columns="1" >
+                <p:graphicImage name="../images/crew.jpg"  width="200" height="150"/>
+              
+            </h:panelGrid> -->
+ <p:imageSwitch effect="zoom">
+    <ui:repeat value="#{imagesView.images}" var="image">
+        <p:graphicImage name="../grocery/#{image}" />
+    </ui:repeat>
+</p:imageSwitch>
+</div>
+</h:body>
+</html>
