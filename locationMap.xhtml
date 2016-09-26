@@ -13,6 +13,11 @@ xmlns:p="http://primefaces.org/ui">
 <script type="text/javascript">
 function init()
 {
+	var directionsDisplay;
+	var directionsService = new google.maps.DirectionsService();
+	var map;
+	directionsDisplay = new google.maps.DirectionsRenderer();
+
 	 console.log(document.getElementById('tracker:city').innerHTML);
 var geocoder = new google.maps.Geocoder();
 var address = document.getElementById('tracker:city').innerHTML;
@@ -30,20 +35,36 @@ geocoder.geocode( { 'address': address}, function(results, status) {
     var coords = new google.maps.LatLng(latitude, longitude),
     map = PF('wmap'),
     marker = new google.maps.Marker({
-        position: coords
-        ,title: data.title
+        position: coords,
+        title: data.title
+       
     });
     map.addOverlay(marker);
-    
+  
     map.infowindow = new google.maps.InfoWindow({
         content: '<h3>' + data.title + '</h3>'
     });
 
     map.getMap().setCenter(coords);
     map.infowindow.open(map.getMap(), marker);
-    
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById('tracker:panel'));
   } 
+  
+  
+  var request = {
+	        origin: 'Bangalore', 
+	        destination: address,
+	        travelMode: google.maps.DirectionsTravelMode.DRIVING
+	      };
+	 
+	      directionsService.route(request, function(response, status) {
+	        if (status == google.maps.DirectionsStatus.OK) {
+	          directionsDisplay.setDirections(response);
+	        }
+	      });
 }); 
+
 
 }
 
@@ -83,6 +104,10 @@ geocoder.geocode( { 'address': address}, function(results, status) {
 </p:panelGrid>
 <p:panelGrid>
 <p:gmap style="width:80%;height:15em;margin-left:15%" zoom="15" type="HYBRID"  widgetVar="wmap"/>
+
+</p:panelGrid>
+<p:panelGrid>
+<p:gmap id="panel" style="width:80%;height:1em;margin-left:15%" zoom="15" type="HYBRID"  widgetVar="wpanel"/>
 
 </p:panelGrid>
 
