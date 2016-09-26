@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui">
+<h:head>
+<script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCC8AF3rb1Rs0ZC7djgaXjdpxKPF1tDsHY">
+            </script>
+            
+<script type="text/javascript">
+function init()
+{
+	 console.log(document.getElementById('tracker:city').innerHTML);
+var geocoder = new google.maps.Geocoder();
+var address = document.getElementById('tracker:city').innerHTML;
+
+geocoder.geocode( { 'address': address}, function(results, status) {
+
+  if (status == google.maps.GeocoderStatus.OK) {
+    var latitude = results[0].geometry.location.lat();
+    var longitude = results[0].geometry.location.lng();
+    console.log(latitude+","+longitude);
+    var data={
+    	title:'Parcel on Transit'	
+    }
+    
+    var coords = new google.maps.LatLng(latitude, longitude),
+    map = PF('wmap'),
+    marker = new google.maps.Marker({
+        position: coords
+        ,title: data.title
+    });
+    map.addOverlay(marker);
+    
+    map.infowindow = new google.maps.InfoWindow({
+        content: '<h3>' + data.title + '</h3>'
+    });
+
+    map.getMap().setCenter(coords);
+    map.infowindow.open(map.getMap(), marker);
+    
+  } 
+}); 
+
+}
+
+</script>
+</h:head>
+<h:body onload="init()">
+<div id="header"><ui:include src="menu.xhtml">
+ </ui:include></div> 
+<h:form id="tracker">
+<p:panelGrid  id="pgrid" columns="2" style="width:80%;height:15em;margin-left:15%">
+<f:facet name="header">
+        <p:row>
+            <p:column colspan="7">Order Tracking</p:column>
+        </p:row>
+</f:facet>
+
+
+<h:outputLabel value="Street"></h:outputLabel>
+
+<h:outputText id="street"  rendered="true" value="#{locationTrackerController.permAddress.street}" >
+</h:outputText>
+
+<h:outputLabel value="City"></h:outputLabel>
+<h:outputText id="city"  rendered="true"  value="#{locationTrackerController.permAddress.city}" >
+</h:outputText>
+<h:outputLabel value="State"></h:outputLabel>
+<h:outputText id="state" rendered="true"  value="#{locationTrackerController.permAddress.state}" >
+</h:outputText>
+
+<h:outputLabel value="PinCode"></h:outputLabel>
+<h:outputText id="pincode" value="#{locationTrackerController.permAddress.pincode}" >
+</h:outputText>
+
+  
+
+
+</p:panelGrid>
+<p:panelGrid>
+<p:gmap style="width:80%;height:15em;margin-left:15%" zoom="15" type="HYBRID"  widgetVar="wmap"/>
+
+</p:panelGrid>
+
+</h:form>
+</h:body>
+</html>
